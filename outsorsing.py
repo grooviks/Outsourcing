@@ -10,9 +10,9 @@ import ntsecuritycon
 
 
 def init_ldap():
-	LDAP_URL = "ldap://172.20.20.5"
-	USERNAME = "obruchev@matorin.local"
-	PASSWORD = "OuKs1911"
+	LDAP_URL = ""
+	USERNAME = ""
+	PASSWORD = ""
 	
 	ad = ldap.initialize(LDAP_URL)
 	ad.simple_bind_s(USERNAME, PASSWORD)
