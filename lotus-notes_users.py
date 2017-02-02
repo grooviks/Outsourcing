@@ -10,11 +10,11 @@ from openpyxl.styles import Border, Side, PatternFill, Font, GradientFill, Align
 #путь к отчету
 report_path = 'C:\\scripts\\Report'
 #адрес сервера LN
-notesServer = '172.20.20.2'
+notesServer = 'server-lotus'
 #имя базы
 notesFile = 'person.nsf'
 #пароль пользователя
-notesPass = '180505ois'
+notesPass = 'password'
 #файл с пользователями не имеющим доступа
 #переделать чтобы выгружались тоже из базы LN
 close_access_file = 'close_access.txt'
