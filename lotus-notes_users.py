@@ -1,7 +1,10 @@
+#! c:\Program Files (x86)\Python35-32\python
+# -*- coding: utf-8 -*-
 import win32com.client
 import pywintypes
-import datetime
+from datetime import datetime, date
 import os
+import sys
 import openpyxl
 from openpyxl import Workbook
 from collections import OrderedDict
@@ -14,7 +17,7 @@ notesServer = '172.20.20.2'
 #имя базы
 notesFile = 'person.nsf'
 #пароль пользователя
-notesPass = '180505ois'
+notesPass = 'password'
 #файл с пользователями не имеющим доступа
 #переделать чтобы выгружались тоже из базы LN
 close_access_file = 'close_access.txt'
@@ -88,7 +91,7 @@ def get_person_list(view):
 		person_list.append(Person(**tmp_dict))	
 	return person_list
 
-def dismiss_in_current_month(dismiss_list, cur_date = datetime.date.today()):
+def dismiss_in_current_month(dismiss_list, cur_date):
 	ret_list = []
 	print(cur_date)
 	for person in dismiss_list: 
@@ -251,6 +254,14 @@ def export_to_excel(final_dict, uniq_company, report_path):
 
 def main():
 
+	try : 
+		#в формате дд-мм-гггг
+		date_dismiss = datetime.strptime(sys.argv[1], "%d-%m-%Y" )
+		print("Дата увольнения = {}".format(date_dismiss))
+	except IndexError:
+		print("Дата увольнения не указана, будет использован текущая дата!") 
+		date_dismiss = date.today()
+
 	#устанавливаем подключение к Lotus сессии
 	notesSession = win32com.client.Dispatch("Lotus.NotesSession")
 	try:
@@ -270,7 +281,7 @@ def main():
 		close_access_list = [line.strip() for line in f]
 	#сделать через map и lambda
 	#находим уволенных в этом месяце - берем текущую дату по дефолту или же передаем в вторым параметром (datetime.datetime(2016,12,30)
-	dismiss_list = dismiss_in_current_month(dismiss_list)
+	dismiss_list = dismiss_in_current_month(dismiss_list,date_dismiss)
 	#получаем кортеж уникальных компаний
 	uniq_company = {person.company for person in person_list}
 	#добавляем уволенных в общий список
@@ -281,10 +292,10 @@ def main():
 	#печать на экране итогового словаря debug
 	#print_all_final_dict(company_final_dict)
 	#экспорт в эксель 
-	export_to_excel(company_final_dict, uniq_company, report_path)
+	#export_to_excel(company_final_dict, uniq_company, report_path)
 
 
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
